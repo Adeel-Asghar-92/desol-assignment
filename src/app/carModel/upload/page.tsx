@@ -1,10 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
-
 import axios from "axios";
 import { useEffect, useState } from "react";
-import jwt from "jsonwebtoken";
 import {
   CarListingInput,
   CarListingSchema,
@@ -12,6 +10,7 @@ import {
 import FormInput from "@/components/Form/FormInput";
 import { LoadingButton } from "@/components/Buttons/LoadingButton";
 import { carListingAction } from "@/actions/car/listing";
+import { carListingBaseUrl } from "@/config";
 
 const UploadCarModel = () => {
   const [listing, setListing] = useState({
@@ -54,7 +53,7 @@ const UploadCarModel = () => {
 
     await axios({
       method: "post",
-      url: "http://localhost:8000/api/carListing/imageupload",
+      url: `${carListingBaseUrl}/imageupload`,
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
