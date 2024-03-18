@@ -20,6 +20,7 @@ const UploadCarModel = () => {
     price: "",
     phoneNumber: "",
     city: "",
+    maxImages: 0,
     images: [],
   });
 
@@ -45,6 +46,10 @@ const UploadCarModel = () => {
   };
   const handleImageChange = async (e: any) => {
     const files: any = Array.from(e.target.files);
+    if (files.length > listing.maxImages) {
+      alert(`You can only upload up to ${listing.maxImages} images.`);
+      return;
+    }
     const base64Images = await Promise.all(
       files.map((file: any) => {
         return new Promise((resolve, reject) => {
@@ -65,7 +70,9 @@ const UploadCarModel = () => {
   const handleSubmit1 = async () => {
     setRequestLoading(true);
     await carListingAction(listing)
-      .then(({ data }) => {})
+      .then(({ data }) => {
+        alert(`Submitted successfully! `);
+      })
       .catch((error) => {
         if (error instanceof Error) {
           // handleApiError(error);
@@ -119,6 +126,13 @@ const UploadCarModel = () => {
             onChange={handleChange}
           />
           <FormInput
+            label="Max Images"
+            name="maxImages"
+            type="number"
+            onChange={handleChange}
+          />
+
+          <FormInput
             label="Images"
             name="images"
             type="file"
@@ -143,7 +157,7 @@ const UploadCarModel = () => {
               </div>
             ))}
           </div>
-          <LoadingButton loading={false} textColor="007bff">
+          <LoadingButton loading={requestLoading} textColor="007bff">
             Submit
           </LoadingButton>
         </form>

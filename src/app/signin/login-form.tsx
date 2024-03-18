@@ -61,7 +61,7 @@ export default function LoginForm() {
         <FormInput label="Email" name="email" type="email" />
         <FormInput label="Password" name="password" type="password" />
 
-        <LoadingButton loading={false} textColor="007bff">
+        <LoadingButton loading={requestLoading} textColor="007bff">
           Login
         </LoadingButton>
       </form>
