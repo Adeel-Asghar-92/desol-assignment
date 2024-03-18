@@ -17,11 +17,12 @@ const UploadCarModel = () => {
   const [listing, setListing] = useState({
     userId: "",
     model: "",
-    price: "",
+    price: 0,
     phoneNumber: "",
     city: "",
     maxImages: 0,
     images: [],
+    preview: [],
   });
 
   const [requestLoading, setRequestLoading] = useState(false);
@@ -46,6 +47,29 @@ const UploadCarModel = () => {
   };
   const handleImageChange = async (e: any) => {
     const files: any = Array.from(e.target.files);
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("images", files[i]);
+    }
+
+    await axios({
+      method: "post",
+      url: "http://localhost:8000/api/carListing/imageupload",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then(({ data }) => {
+        setListing((prevListing: any) => ({
+          ...prevListing,
+          images: data.media,
+        }));
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(`Error: ${err}`);
+      });
     if (files.length > listing.maxImages) {
       alert(`You can only upload up to ${listing.maxImages} images.`);
       return;
@@ -62,7 +86,7 @@ const UploadCarModel = () => {
     );
     setListing((prevListing: any) => ({
       ...prevListing,
-      images: base64Images,
+      preview: base64Images,
     }));
     return base64Images;
   };
@@ -76,6 +100,7 @@ const UploadCarModel = () => {
       .catch((error) => {
         if (error instanceof Error) {
           // handleApiError(error);
+          alert(`Error:${error}`);
         } else {
           console.log("Error message:", error.message);
         }
@@ -110,7 +135,8 @@ const UploadCarModel = () => {
           <FormInput
             label="Price"
             name="price"
-            type="string"
+            type="number"
+            valueAsNumber={true}
             onChange={handleChange}
           />
           <FormInput
@@ -129,6 +155,7 @@ const UploadCarModel = () => {
             label="Max Images"
             name="maxImages"
             type="number"
+            valueAsNumber={true}
             onChange={handleChange}
           />
 
@@ -140,7 +167,7 @@ const UploadCarModel = () => {
           />
 
           <div>
-            {listing.images.map((image, index) => (
+            {listing.preview.map((image, index) => (
               <div key={index} style={{ marginTop: "10px" }}>
                 <img
                   src={image}
