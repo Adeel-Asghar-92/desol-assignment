@@ -117,6 +117,7 @@ const UploadCarModel = () => {
     setListing((prevListing) => ({
       ...prevListing,
       images: prevListing.images.filter((_, i) => i !== index), // Remove image at index
+      preview: prevListing.images.filter((_, i) => i !== index), // Remove image at index
     }));
   };
 
