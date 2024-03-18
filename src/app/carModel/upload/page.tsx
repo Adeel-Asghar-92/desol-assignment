@@ -11,6 +11,7 @@ import {
 } from "@/lib/validations/carListing.schema";
 import FormInput from "@/components/Form/FormInput";
 import { LoadingButton } from "@/components/Buttons/LoadingButton";
+import { carListingAction } from "@/actions/car/listing";
 
 const UploadCarModel = () => {
   const [listing, setListing] = useState({
@@ -62,23 +63,19 @@ const UploadCarModel = () => {
   };
 
   const handleSubmit1 = async () => {
-    // localStorage.getItem("accessToken")
-    const decoded: any = jwt.decode(localStorage.getItem("accessToken") || "");
-    const data = {
-      ...listing,
-      userId: decoded.id,
-    };
-
     setRequestLoading(true);
-    try {
-      const res = await axios.post(
-        "http://localhost:8000/api/carListing/upload",
-        data
-      );
-      console.log(res.data);
-    } catch (err) {
-      console.error(err);
-    }
+    await carListingAction(listing)
+      .then(({ data }) => {})
+      .catch((error) => {
+        if (error instanceof Error) {
+          // handleApiError(error);
+        } else {
+          console.log("Error message:", error.message);
+        }
+      })
+      .finally(() => {
+        setRequestLoading(false);
+      });
   };
 
   const onSubmitHandler: SubmitHandler<CarListingInput> = (values) => {
