@@ -7,7 +7,9 @@ import _axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // axios instance for orders
 const axios = _axios.create({
-  baseURL: process.env.AUTH_API_URL,
+  // baseURL: process.env.AUTH_API_URL,
+  // baseURL: "http://localhost:8000/api/auth",
+  baseURL: "https://desol-backend-assign.vercel.app/api/auth",
 });
 
 axios.interceptors.request.use(requestLogger, errorLogger);
@@ -22,7 +24,6 @@ const auth = async <TData = any, TError = any>(
 
     const response = await axios.request<TData>(config);
     console.log("response", response);
-
     return response;
   } catch (error: any) {
     if (error.response) {

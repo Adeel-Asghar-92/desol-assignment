@@ -6,12 +6,15 @@ type FormInputProps = {
   label: string;
   name: string;
   type?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
   label,
   name,
   type = "text",
+  onChange,
+  ...rest
 }) => {
   const {
     register,
@@ -26,7 +29,10 @@ const FormInput: React.FC<FormInputProps> = ({
         type={type}
         placeholder=" "
         className={styles.inputField}
-        {...register(name)}
+        multiple
+        // onChange={onChange}
+        {...register(name, { onChange })}
+        {...rest}
       />
       {errors[name] && (
         <span className={styles.errorMessage}>
